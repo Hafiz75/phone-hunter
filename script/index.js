@@ -10,6 +10,11 @@ async function loadData(searchInp,showAll) {
     }
     let asset = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchInp}`);
     let phoneObj = await asset.json()
+    /* when our search value is aimless(suppose:'jddsffs') that time sever not response on this request and return value of 'status' is false (that time we can not get any data from server).so we set a default search value is 'a'.As a result, server return some data related of 'a'. */
+    if (phoneObj.status == false) {
+       asset = await fetch(`https://openapi.programming-hero.com/api/phones?search=a`);
+       phoneObj = await asset.json()
+    }
     displayData(phoneObj,showAll)
 }
    /* loadData also called in whatSearch() function.this whatSearch() trigger all function.so when we not press the search button this page will be blank.to prevent this blankness loadData() function called here and this function called other function synchronously */
@@ -19,17 +24,19 @@ function whatSearch(showAll) {
     let searchInp = document.getElementById('whatSearch').value
     loadData(searchInp,showAll)
 }
+/* this function is concern with 'Show All' button */
 function handleShowAll() {
     let showAll = true
     whatSearch(showAll)
 }
-
+/* this function is for display data. */
 function displayData(some,showAll) {
-    /* select show all button */
+    /* select show all button and phoneContainer */
     let showAllBtn = document.getElementById('showAll')
     let phoneContainer = document.getElementById('phoneContainer')
     /* remove previous data */
     phoneContainer.textContent = ''
+    /* here data is an array extract from some (phoneObj). */
     let phonesArray = some.data
     if (showAll == true) {
         phonesArray = phonesArray;
@@ -100,7 +107,6 @@ function disShowDetails(some) {
 }
 
 /* banner image showing control */
-
 if (window.innerWidth < 500) {
     document.getElementById('bannerImg1').classList.add('hidden')
     document.getElementById('bannerImg3').classList.add('hidden')
