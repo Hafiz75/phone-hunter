@@ -4,10 +4,7 @@ async function loadData(searchInp,showAll) {
     document.getElementById('spinner').classList.remove('hidden')
     /* show overlay */
     document.getElementById('overlay').classList.add('opacity-20')
-    /* this condition work when search input is empty or undefined */
-    if (searchInp == undefined || searchInp == '') {
-        searchInp = 'a'
-    }
+   
     let asset = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchInp}`);
     let phoneObj = await asset.json()
     /* when our search value is aimless(suppose:'jddsffs') that time sever not response on this request and return value of 'status' is false (that time we can not get any data from server).so we set a default search value is 'a'.As a result, server return some data related of 'a'. */
@@ -38,18 +35,20 @@ function displayData(some,showAll) {
     phoneContainer.textContent = ''
     /* here data is an array extract from some (phoneObj). */
     let phonesArray = some.data
+
+    if(phonesArray.length > 12 && showAll == undefined){
+      phonesArray = phonesArray.slice(0,12)
+      showAllBtn.classList.remove('hidden')
+  } else{showAllBtn.classList.add('hidden')
+  /* this statement work when 'Show All' btn is clicked bcz this generate a true value from handleShowAll() */
     if (showAll == true) {
         phonesArray = phonesArray;
         showAllBtn.classList.add('hidden')
-    }else{
-        phonesArray = phonesArray.slice(0,15)
-        showAllBtn.classList.remove('hidden')
     }
-
+  }
     for (const items of phonesArray) {
         phoneContainer.innerHTML += 
-        `
-        <div class="card border border-[#CFCFCF] p-4 md:p-6">
+        `<div class="card border border-[#CFCFCF] p-4 md:p-6">
         <figure class="p-5 md:p-10 bg-[rgba(13,110,253,0.05)]">
           <img src="${items.image}" alt="Shoes" class="rounded-xl" />
         </figure>
