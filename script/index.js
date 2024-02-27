@@ -7,7 +7,7 @@ async function loadData(searchInp,showAll) {
    
     let asset = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchInp}`);
     let phoneObj = await asset.json()
-    /* when our search value is aimless(suppose:'jddsffs') that time sever not response on this request and return value of 'status' is false (that time we can not get any data from server).so we set a default search value is 'a'.As a result, server return some data related of 'a'. */
+    /* when our search value is empty string or undefined(when we not trigger show all button) or aimless(suppose:'jddsffs') that time sever not response on this request and return value of 'status' is false (that time we can not get any data from server).so we set a default search value is 'a'.As a result, server return some data related of 'a'. */
     if (phoneObj.status == false) {
        asset = await fetch(`https://openapi.programming-hero.com/api/phones?search=a`);
        phoneObj = await asset.json()
